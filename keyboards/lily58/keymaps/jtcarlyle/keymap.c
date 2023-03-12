@@ -28,11 +28,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_XAH] = LAYOUT(
-  KC_GRV,   KC_8,    KC_7,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_2,    KC_1,    KC_9,    KC_0,    KC_EQL,
-  KC_BSLS,  KC_QUOT, KC_COMM, KC_DOT,  KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH,
-  KC_ESC,   KC_A,    KC_O,    KC_E,    KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    KC_MINS,
-  KC_LBRC,  KC_SCLN, KC_Q,    KC_J,    KC_K,    KC_X, KC_LALT,  KC_RGUI,  KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RBRC,
-                  KC_LGUI, KC_TAB, LT(_NAV, KC_SPC),  KC_LCTL,  KC_LSFT,  LT(_FUN, KC_BSPC), KC_ENT, KC_RALT
+  KC_GRV,        KC_8,    KC_7,    KC_3,   KC_4,    KC_5,                     KC_6,    KC_2,    KC_1,    KC_9,    KC_0,    KC_EQL,
+  KC_BSLS,       KC_QUOT, KC_COMM, KC_DOT, KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH,
+  GUI_T(KC_ESC), KC_A,    KC_O,    KC_E,   KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    GUI_T(KC_MINS),
+  KC_LALT,       KC_SCLN, KC_Q,    KC_J,   KC_K,    KC_X, KC_LBRC,  KC_RBRC,  KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RALT,
+                       KC_MEH, KC_TAB, LT(_NAV, KC_SPC),  KC_LCTL,  KC_LSFT,  LT(_FUN, KC_BSPC), KC_ENT, KC_DEL
 ),
 /* QWE - QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -75,11 +75,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 [_MMOD] = LAYOUT(
-  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
-  _______, _______, _______, _______, _______, _______, _______, KC_RCTL, _______, _______, _______, _______, _______, _______,
-                  KC_LCTL, _______, LT(_MNAV, KC_SPC),  KC_LGUI, _______, _______, _______, _______
+  _______,       _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+  _______,       _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
+  CTL_T(KC_ESC), _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, CTL_T(CK_MINS),
+  _______,       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+               _______, _______, LT(_MNAV, KC_SPC),  KC_LGUI, _______, _______, _______, _______
 ),
 /* NAV - Text editing/navigation layer
  * ,-----------------------------------------.                    ,-----------------------------------------.
