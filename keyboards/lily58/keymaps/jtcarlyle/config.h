@@ -26,8 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-#define QUICK_TAP_TERM 120
-#define TAPPING_TERM 200
+#define QUICK_TAP_TERM 0 // I don't use the tap then hold to repeat
+#define TAPPING_TERM 180
+#define IGNORE_MOD_TAP_INTERRUPT
+#define PERMISSIVE_HOLD
+// #define TAPPING_FORCE_HOLD_PER_KEY
 
 #undef RGBLED_NUM
 #define RGBLIGHT_EFFECT_BREATHING

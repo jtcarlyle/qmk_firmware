@@ -11,6 +11,17 @@ enum layer_number {
   _ADJUST,
 };
 
+// dual purpose tap-hold keys
+#define ST_TAB SFT_T(KC_TAB)
+#define LT_SPC LT(_NAV, KC_SPC)
+#define MLT_SPC LT(_MNAV, KC_SPC)
+#define CT_ESC CTL_T(KC_ESC)
+#define LT_BSPC LT(_FUN, KC_BSPC)
+#define LT_ENT LT(_FUN, KC_ENT)
+#define CT_DEL CTL_T(KC_DEL)
+#define AT_HOME ALT_T(KC_HOME)
+#define AT_MINS ALT_T(KC_MINS)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* XAH - Base Layer of Xah Lee style DVORAK
@@ -29,11 +40,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_XAH] = LAYOUT(
-  KC_GRV,         KC_8,    KC_7,    KC_3,   KC_4,    KC_5,                     KC_6,    KC_2,    KC_1,    KC_9,    KC_0,    KC_EQL,
-  KC_BSLS,        KC_QUOT, KC_COMM, KC_DOT, KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH,
-  ALT_T(KC_HOME), KC_A,    KC_O,    KC_E,   KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    ALT_T(KC_MINS),
-  KC_LSFT,        KC_SCLN, KC_Q,    KC_J,   KC_K,    KC_X, KC_LBRC,  KC_RBRC,  KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RSFT,
-           KC_MEH, GUI_T(KC_ESC), LT(_NAV, KC_SPC),  CTL_T(KC_TAB),  SFT_T(KC_ENT),  LT(_FUN, KC_BSPC),   GUI_T(KC_DEL), KC_HYPR
+  KC_GRV,  KC_8,    KC_7,    KC_3,   KC_4,    KC_5,                     KC_6,    KC_2,    KC_1,    KC_9,    KC_0,    KC_EQL,
+  KC_BSLS, KC_QUOT, KC_COMM, KC_DOT, KC_P,    KC_Y,                     KC_F,    KC_G,    KC_C,    KC_R,    KC_L,    KC_SLSH,
+  AT_HOME, KC_A,    KC_O,    KC_E,   KC_U,    KC_I,                     KC_D,    KC_H,    KC_T,    KC_N,    KC_S,    AT_MINS,
+  KC_LGUI, KC_SCLN, KC_Q,    KC_J,   KC_K,    KC_X, KC_LBRC,  KC_RBRC,  KC_B,    KC_M,    KC_W,    KC_V,    KC_Z,    KC_RGUI,
+                            KC_MEH, CT_ESC, LT_SPC,  ST_TAB,  LT_ENT,  LT_BSPC, CT_DEL, KC_HYPR
 ),
 /* QWE - QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -59,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_RBRC,  KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_MINS,
   KC_LSFT,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LBRC,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LALT,  KC_LGUI,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RBRC,
-                           KC_LALT, KC_LCTL, KC_SPC, KC_TAB,   KC_LSFT,  LT(_FUN, KC_BSPC), KC_ENT, KC_HYPR
+                            KC_LALT, KC_LCTL, KC_SPC, KC_TAB,   KC_LSFT,  LT(_FUN, KC_BSPC), KC_ENT, KC_HYPR
 ),
 /* MMOD - Mac Modifiers
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -80,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                  _______, _______, LT(_MNAV, KC_SPC),  _______, _______, _______, _______, _______
+                             _______, _______, MLT_SPC, _______, _______, _______, _______, _______
 ),
 /* NAV - Text editing/navigation layer
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -143,7 +154,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   DF(_QWE),                   _______, KC_CIRC, KC_AMPR, KC_DLR,  KC_PERC,   _______,
   _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,   DF(_XAH),                   _______, KC_LCBR, KC_LPRN, KC_LBRC, KC_ASTR,   KC_CAPS,
   _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  MO(_NAV), _______, _______, _______, KC_RCBR, KC_RPRN, KC_RBRC, TG(_MMOD), _______,
-                       _______, C(KC_ESC), C(KC_SPC),  C(KC_TAB), _______, _______, _______, _______
+                       _______, S(KC_ESC), S(KC_SPC),  S(KC_TAB), _______, _______, _______, _______
 ),
 
 [_MEDIA] = LAYOUT(
