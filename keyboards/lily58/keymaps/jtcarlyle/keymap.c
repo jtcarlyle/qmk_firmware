@@ -157,11 +157,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_PLV] = LAYOUT(
-  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  STN_N1,  STN_N2,  STN_N3,  STN_N4,  STN_N5,  STN_N6,                     STN_N7,  STN_N8,  STN_N9,  STN_NA,  STN_NB,  STN_NC,
-  STN_FN,  STN_S1,  STN_TL,  STN_PL,  STN_HL,  STN_ST1,                    STN_ST3, STN_FR,  STN_PR,  STN_LR,  STN_TR,  STN_DR,
-  XXXXXXX, STN_S2,  STN_KL,  STN_WL,  STN_RL,  STN_ST2, DF(_XAH), XXXXXXX, STN_ST4, STN_RR,  STN_BR,  STN_GR,  STN_SR,  STN_ZR,
-                             XXXXXXX, STN_PWR, STN_A,   STN_O,    STN_E,   STN_U,   STN_RE1, STN_RE2
+  XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+  STN_N1,   STN_N2,  STN_N3,  STN_N4,  STN_N5,  STN_N6,                     STN_N7,  STN_N8,  STN_N9,  STN_NA,  STN_NB,  STN_NC,
+  STN_FN,   STN_S1,  STN_TL,  STN_PL,  STN_HL,  STN_ST1,                    STN_ST3, STN_FR,  STN_PR,  STN_LR,  STN_TR,  STN_DR,
+  STN_RES2, STN_S2,  STN_KL,  STN_WL,  STN_RL,  STN_ST2, DF(_XAH), XXXXXXX, STN_ST4, STN_RR,  STN_BR,  STN_GR,  STN_SR,  STN_ZR,
+                             STN_PWR, STN_A,    STN_O,  STN_AO,    STN_EU,  STN_E,   STN_U, STN_RE1
 ),
 /* FUN - function keys and symbols
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -181,7 +181,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______,   _______,
   _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   DF(_QWE),                   _______, KC_CIRC, KC_AMPR, KC_DLR,  KC_PERC,   _______,
   _______, KC_F5,   KC_F6,   KC_F7,   KC_F8,   DF(_XAH),                   _______, KC_LCBR, KC_LPRN, KC_LBRC, KC_ASTR,   KC_CAPS,
-  _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  DF(_PLV), _______, _______, _______, KC_RCBR, KC_RPRN, KC_RBRC, TG(_MMOD), _______,
+  _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  DF(_PLV), _______, _______, _______, KC_RCBR, KC_RPRN, KC_RBRC, TG(_MMOD), NK_TOGG,
                        _______, C(KC_ESC), C(KC_SPC),  C(KC_TAB), _______, _______, _______, _______
 ),
 
