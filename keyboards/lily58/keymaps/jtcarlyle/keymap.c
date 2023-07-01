@@ -2,23 +2,27 @@
 #include "layout.h"
 
 enum layer_number {
-  DVO = 0,
-  QWE,
-  EXTL,
-  EXTR,
+  _DVO = 0,
+  _QWE,
+  _MMOD,
+  _NAV,
+  _MNAV,
+  _EXTL,
+  _EXTR,
 };
 
-// dual purpose mod/layer-tap keys
+/* dual purpose mod/layer-tap keys */
 #define ST_SPC SFT_T(KC_SPC)
 #define ST_ENT SFT_T(KC_ENT)
-#define LT_TAB LT(EXTL, KC_TAB)
-#define LT_BSPC LT(EXTR, KC_BSPC)
-#define GT_UP GUI_T(KC_UP)
-#define GT_RGHT GUI_T(KC_RGHT)
-#define CT_ESC CTL_T(KC_ESC)
-#define CT_MINS CTL_T(KC_MINS)
-#define AT_LBRC ALT_T(KC_LBRC)
-#define AT_RBRC ALT_T(KC_RBRC)
+#define LT_TAB LT(_NAV, KC_TAB)
+#define CT_BSPC CTL_T(EXTR, KC_BSPC)
+/* #define L_SYML */
+#define AT_ESC ALT_T(KC_ESC)
+#define AT_MINS ALT_T(KC_MINS)
+#define GT_LBRC GUI_T(KC_LBRC)
+#define GT_RBRC GUI_T(KC_RBRC)
+
+/* one shot modifiers */
 #define OS_LSFT OSM(MOD_LSFT)
 #define OS_LCTL OSM(MOD_LCTL)
 #define OS_LALT OSM(MOD_LALT)
@@ -46,13 +50,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
  *                   `----------------------------'           '------''--------------------'
  */
-
-    [DVO] = LAYOUT_LR(
+    [_DVO] = LAYOUT_LR(
       KC_GRV , KC_7   , KC_8   , KC_9   , KC_0   , KC_5   ,
       KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
       CT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
       AT_LBRC, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_F11,
-                                 KC_LEFT, GT_RGHT, LT_TAB , ST_ENT ,
+                                 KC_LEFT, GT_RGHT, ST_SPC , LT_TAB ,
 
                KC_6   , KC_1   , KC_2   , KC_3   , KC_4   , KC_EQL ,
                KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
@@ -81,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * can be reprogrammed in games
  *
  */
-    [QWE] = LAYOUT_LR(
+    [_QWE] = LAYOUT_LR(
       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
       KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,
       KC_ESC , KC_A   , KC_S   , KC_S   , KC_D   , KC_F   ,
@@ -92,7 +95,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC,
                KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
       KC_RBRC, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
-      KC_ENT , KC_SPC , KC_RALT, KC_EQL
+      KC_ENT , KC_BSPC, KC_RALT, KC_EQL
     ),
 
 /* NAV - Text editing/navigation layer
