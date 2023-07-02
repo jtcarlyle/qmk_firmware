@@ -1,3 +1,7 @@
+SRC += features/achordion.c
+# SRC += features/custom_shift_keys.c
+SRC += features/select_word.c
+
 BOOTMAGIC_ENABLE = no       # Enable Bootmagic Lite
 MOUSEKEY_ENABLE = no        # Mouse keys
 EXTRAKEY_ENABLE = yes       # Audio control and System control
