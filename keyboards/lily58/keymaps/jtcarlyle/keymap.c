@@ -151,13 +151,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* SYML - function keys and symbols on the left hand (intended for cross hand use)
  * ,-----------------------------------------.                    ,-----------------------------------------.
- * |      |      |      |      |      |      |                    |  F6  |  F1  | F2   |  F3   | F4   |      |
+ * |      |      |      |      |      |      |                    |  F6  |  F1  | F2   |  F3   | F4   |     |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |   &  |   %  |  [   |   ]  |   ^  |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |      | GUI  | ALT  | CTRL | SHIFT|      |-------.    ,-------|   |  |   :  |  (   |   )  |   \  |      |
  * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
- * |      | UNDO | CUT  | COPY | PASTE|      |-------|    |-------|   ~  |  $   |  {   |  }   |  @  |      |
+ * |      | UNDO | CUT  | COPY | PASTE|      |-------|    |-------|   ~  |  $   |  {   |  }   |  @  |       |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   |      |       |     | /       /       \   _  \  |  DEL | HOME | END  |
  *                   |      |      |      |/       /         \      \ |      |      |      |
@@ -257,47 +257,60 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
       return true;
       break;
   }
+  // No reason to add this. Just makes input method misfiring easier.
   // Also allow same-hand holds when the other key is in the rows below the
   // alphas. I need the `% (MATRIX_ROWS / 2)` because my keyboard is split.
-  if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 4) {
-    return true;
-  }
+  // if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 4) {
+    // return true;
+  // }
 
   // Otherwise, follow the opposite hands rule.
   return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
+bool achordion_eager_mod(uint8_t mod) {
+  switch (mod) {
+    case MOD_LSFT:
+    case MOD_RSFT:
+    case MOD_LCTL:
+    case MOD_RCTL:
+    case MOD_LGUI:
+    case MOD_RGUI:
+      return true;  // Eagerly apply Shift and Ctrl mods.
+
+    default:
+      return false;
+  }
+}
+
 uint16_t get_alt_repeat_key_keycode_user(uint16_t keycode, uint8_t mods) {
   if ((mods & ~MOD_MASK_SHIFT) == 0) {
     switch (keycode) {
-      // Behavior Dvorak SFB removal.
-      case KC_R:  // R -> N
+      // Dvorak SFB removal.
+      case KC_R:    // R -> N
         return KC_N;
-      case KC_C:  // C -> T
+      case KC_C:    // C -> T
         return KC_T;
-      case KC_G:  // G -> H
+      case KC_G:    // G -> H
         return KC_H;
       case HOME_S:  // S -> L
         return KC_L;
-      case KC_L:  // L -> S
+      case KC_L:    // L -> S
         return KC_S;
       case HOME_N:  // N -> V
         return KC_V;
-      case KC_Z:  // Z -> L
+      case KC_Z:    // Z -> L
         return  KC_L;
       case HOME_U:  // U -> P
         return KC_P;
-      case KC_B:  // B -> R
+      case KC_P:    // P -> U
+        return KC_U;
+      case KC_B:    // B -> R
         return KC_R;
-      case KC_T:  // T -> ION
-        return M_ION;
-      case KC_M:  // M -> ENT
-        return M_ENT;
-
-      case ST_SPC:  // spc -> THE spc
-        return M_THE;
-     case HOME_O:  // O -> ULD spc
-        return M_ULD;
+      case KC_T:    // T -> W
+       return KC_W;
+      case KC_M:    // M -> B
+        return KC_B;
     }
   } else if ((mods & MOD_MASK_CTRL)) {
     switch (keycode) {
@@ -318,13 +331,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     set_keylog(keycode, record);
 #endif
     // set_timelog();
-    switch (keycode) {
+    // switch (keycode) {
       // Macros invoked through the ALTREP key.
-      case M_ION:      SEND_STRING(/*t*/"ion"); break;
-      case M_ENT:      SEND_STRING(/*m*/"ent"); break;
-      case M_ULD:      SEND_STRING(/*c|w|sho*/"uld "); break;
-      case M_THE:      SEND_STRING(/* */"the "); break;
-    }
+      // case M_ION:      SEND_STRING(/*t*/"ion"); break;
+      // case M_ENT:      SEND_STRING(/*m*/"ent"); break;
+      // case M_ULD:      SEND_STRING(/*c|w|sho*/"uld "); break;
+      // case M_THE:      SEND_STRING(/* */"the "); break;
+    // }
   }
   return true;
 }
