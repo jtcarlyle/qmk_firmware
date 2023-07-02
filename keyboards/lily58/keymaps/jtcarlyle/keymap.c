@@ -2,21 +2,35 @@
 #include "layout.h"
 
 enum layer_number {
-  _DVO = 0,
-  _QWE,
-  _MMOD,
-  _NAV,
-  _MNAV,
-  _EXTL,
-  _EXTR,
+  DVO = 0,
+  QWE,
+  MMOD,
+  NAV,
+  MNAV,
+  SYML,
+  SYMR,
+};
+
+enum custom_keycodes {
+  SELWORD = SAFE_RANGE,
+  M_TION,
+  M_SION,
+  M_MENT,
+  M_THE,
+  M_THAT,
+  M_BUT,
+  M_AND,
+  M_WILL,
+  M_WOULD
 };
 
 /* dual purpose mod/layer-tap keys */
 #define ST_SPC SFT_T(KC_SPC)
 #define ST_ENT SFT_T(KC_ENT)
-#define LT_TAB LT(_NAV, KC_TAB)
-#define CT_BSPC CTL_T(EXTR, KC_BSPC)
-/* #define L_SYML */
+#define LT_TAB LT(NAV, KC_TAB)
+#define CT_BSPC CTL_T(KC_BSPC)
+#define LT_AREP LT(SYML, QK_AREP)
+#define LT_REP LT(SYMR, QK_REP)
 #define AT_ESC ALT_T(KC_ESC)
 #define AT_MINS ALT_T(KC_MINS)
 #define GT_LBRC GUI_T(KC_LBRC)
@@ -31,6 +45,20 @@ enum layer_number {
 #define OS_RCTL OSM(MOD_RCTL)
 #define OS_RALT OSM(MOD_RALT)
 #define OS_RGUI OSM(MOD_RGUI)
+
+/* others, make macros later */
+#define DELWORD C(KC_BSPC)
+#define NXTWORD C(KC_RGHT)
+#define PRVWORD C(KC_LEFT)
+#define LNSTRT KC_HOME
+#define LNEND KC_END
+#define NXTPARA C(KC_DOWN)
+#define PRVPARA C(KC_UP)
+#define REDO C(KC_Y)
+#define ZOOMIN C(KC_EQL)
+#define ZOOMOUT C(KC_MINS)
+#define CTL_ENT C(KC_ENT)
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -50,19 +78,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
  *                   `----------------------------'           '------''--------------------'
  */
-    [_DVO] = LAYOUT_LR(
+    [DVO] = LAYOUT_LR(
       KC_GRV , KC_7   , KC_8   , KC_9   , KC_0   , KC_5   ,
       KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
-      CT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
-      AT_LBRC, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_F11,
-                                 KC_LEFT, GT_RGHT, ST_SPC , LT_TAB ,
+      AT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
+      GT_LBRC, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_F11,
+                                 KC_LEFT, LT_AREP, ST_SPC , LT_TAB ,
 
                KC_6   , KC_1   , KC_2   , KC_3   , KC_4   , KC_EQL ,
                KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
-               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , CT_MINS,
-      KC_F12 , KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , AT_RBRC,
-      ST_SPC , LT_BSPC, GT_UP  , KC_DOWN
-    ),
+               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , AT_MINS,
+      KC_F12 , KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , GT_RBRC,
+      CT_BSPC, ST_ENT , LT_REP , KC_RGHT
+),
 
 /* QWE - QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -84,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * can be reprogrammed in games
  *
  */
-    [_QWE] = LAYOUT_LR(
+    [QWE] = LAYOUT_LR(
       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
       KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,
       KC_ESC , KC_A   , KC_S   , KC_S   , KC_D   , KC_F   ,
@@ -95,7 +123,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_LBRC,
                KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
       KC_RBRC, KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
-      KC_ENT , KC_BSPC, KC_RALT, KC_EQL
+      KC_BSPC , KC_ENT, KC_RALT, KC_EQL
     ),
 
 /* NAV - Text editing/navigation layer
@@ -112,13 +140,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |       |     |      |
  *                   `----------------------------'           '------''--------------------'
  */
-/* [_NAV] = LAYOUT( */
-/*   _______,    _______,   _______,   _______,    _______,    _______,                     _______,  _______,    _______, _______,    _______,    _______, */
-/*   _______,    C(KC_ESC), C(KC_SPC), C(KC_BSPC), C(KC_DEL),  _______,                     C(KC_Z),  C(KC_LEFT), KC_UP,   C(KC_RGHT), C(KC_Y),    C(KC_EQL), */
-/*   MO(_MEDIA), KC_LGUI,   KC_LALT,   KC_LCTL,    KC_LSFT,    _______,                     KC_HOME,  KC_LEFT,    KC_DOWN, KC_RGHT,    KC_END,     C(KC_MINS), */
-/*   _______,    _______,   C(KC_X),   C(KC_C),    C(KC_V),    _______, _______, _______,   C(KC_F),  C(KC_UP),   KC_PGUP, KC_PGDN,    C(KC_DOWN), _______, */
-/*                                     _______,    _______,    _______, _______, S(KC_ENT), KC_F3,    S(KC_F3),   _______ */
-/* ), */
+    [NAV] = LAYOUT_LR(
+      _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, DELWORD, _______, _______,
+      _______, OS_LGUI, OS_LALT, OS_RCTL, OS_LSFT, _______,
+      _______, _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
+                                 _______, _______, _______, _______,
+
+               _______, _______, _______, _______, _______, _______,
+               C(KC_Z), PRVWORD, KC_UP  , NXTWORD, REDO   , ZOOMIN ,
+               LNSTRT , KC_LEFT, KC_DOWN, KC_RGHT, LNEND  , ZOOMOUT,
+      _______, C(KC_F), NXTPARA, KC_PGUP, KC_PGDN, PRVPARA, _______,
+      DELWORD, CTL_ENT, _______, _______
+),
 
 /* SYML - function keys and symbols on the left hand (intended for cross hand use)
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -134,18 +168,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
-    [EXTL] = LAYOUT_LR(
+    [SYML] = LAYOUT_LR(
        _______, _______, _______, _______, _______, _______,
-       _______, _______, _______, _______, _______, _______,
+       _______, _______, DF(DVO), DF(QWE), _______, _______,
        _______, OS_LGUI, OS_LALT, OS_LCTL, OS_LSFT, _______,
-       _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), _______, _______,
+       _______, _______, _______, _______, _______, _______, _______,
                                   _______, _______, _______, _______,
 
                          KC_F6  , KC_F1  , KC_F2  , KC_F3  , KC_F4  , _______,
-                         KC_AMPR, KC_PERC, KC_LBRC, KC_RBRC, KC_CIRC, _______,
-                         KC_PIPE, KC_COLN, KC_LPRN, KC_RPRN, KC_BSLS, _______,
-                KC_F14 , KC_TILD, KC_DLR , KC_LCBR, KC_RCBR, KC_AT  , _______,
-                KC_UNDS, KC_DEL , KC_PGUP, KC_PGDN
+                         KC_AMPR, KC_AT  , KC_LBRC, KC_RBRC, KC_CIRC, _______,
+                         KC_PIPE, KC_COLN, KC_LPRN, KC_RPRN, KC_PERC, _______,
+                KC_F14 , KC_TILD, KC_DLR , KC_LCBR, KC_RCBR, _______, _______,
+                KC_DEL , KC_BSLS, _______, _______
     ),
 
 /* SYMR - function keys and symbols on the left hand (intended for cross hand use)
@@ -163,17 +197,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 
-    [EXTR] = LAYOUT_LR(
+    [SYMR] = LAYOUT_LR(
        _______, KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F5  ,
        _______, _______, KC_LABK, KC_RABK, KC_ASTR, _______,
        _______, KC_PLUS, KC_SLSH, KC_MINS, KC_EQL , KC_HASH,
        _______, KC_EXLM, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_F13 ,
-                                  KC_HOME, KC_END , _______, _______,
+                                  _______, _______, _______, _______,
 
                          _______, _______, _______, _______, _______, _______,
-                         _______, _______, DF(DVO), DF(QWE), _______, _______,
+                         _______, KC_MPRV, KC_MPLY, KC_MNXT, _______, _______,
                          _______, OS_RSFT, OS_RCTL, OS_RALT, OS_RGUI, _______,
-                _______, _______, KC_MPRV, KC_MPLY, KC_MSTP, KC_MNXT, _______,
+                _______, _______, _______, _______, _______, _______, _______,
                                            _______, _______, _______, _______
     ),
 };
