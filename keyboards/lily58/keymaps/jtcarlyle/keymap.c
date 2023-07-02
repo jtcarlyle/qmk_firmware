@@ -21,9 +21,9 @@ enum custom_keycodes {
 
 /* dual purpose mod/layer-tap keys */
 #define ST_SPC SFT_T(KC_SPC)
-#define ST_ENT SFT_T(KC_ENT)
+#define ST_BSPC SFT_T(KC_BSPC)
 #define LT_TAB LT(NAV, KC_TAB)
-#define LT_BSPC LT(SYM, KC_BSPC)
+#define LT_ENT LT(SYM, KC_ENT)
 #define HOME_A GUI_T(KC_A)
 #define HOME_O ALT_T(KC_O)
 #define HOME_U CTL_T(KC_U)
@@ -84,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
                KC_D   , HOME_H , KC_T   , HOME_N , HOME_S , KC_MINS,
       KC_F12 , KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , KC_RBRC,
-      LT_BSPC, ST_ENT , QK_REP , KC_RGHT
+      LT_ENT, ST_BSPC , QK_REP , KC_RGHT
 ),
 
 /* QWE - QWERTY
@@ -249,11 +249,11 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record,
       return true;
       break;
 
-    case LT_BSPC:
+    case ST_BSPC:
       return true;
       break;
 
-    case ST_ENT:
+    case LT_ENT:
       return true;
       break;
   }
