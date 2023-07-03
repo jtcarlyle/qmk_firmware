@@ -105,12 +105,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * Full keyboard functionality in a semi-sane usable layout
  * Note that ESC is where Capslock normally is. I hope that this
  * can be reprogrammed in games
+ * need to change the tab layer-tap at some point
  *
  */
     [QWE] = LAYOUT_LR(
       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
-      KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,
-      KC_ESC , KC_A   , KC_S   , KC_S   , KC_D   , KC_F   ,
+      LT_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   ,
+      KC_ESC , KC_A   , KC_S   , KC_D   , KC_F   , KC_G   ,
       KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   , KC_BSLS,
                               KC_LGUI , KC_LALT  , KC_SPC , KC_LCTL,
 
@@ -137,8 +138,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
     [NAV] = LAYOUT_LR(
       _______, _______, _______, _______, _______, _______,
-      _______, KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,
-      _______, OS_LGUI, OS_LALT, OS_LSFT, OS_RCTL, _______,
+      DF(QWE), KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,
+      DF(DVO), OS_LGUI, OS_LALT, OS_LSFT, OS_RCTL, _______,
       _______, _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
                                  _______, _______, _______, _______,
 
