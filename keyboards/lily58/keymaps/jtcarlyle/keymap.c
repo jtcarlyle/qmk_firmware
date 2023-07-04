@@ -5,22 +5,57 @@
 #include "layout.h"
 
 enum layer_number {
-  DVO = 0,
-  QWE,
-  NAV,
-  SYM,
+  _DVORAK = 0,
+  _QWERTY,
+  _SINGETA,
+  _NAV,
+  _SYM,
+
 };
 
 enum custom_keycodes {
   SELWORD = SAFE_RANGE,
-  M_ION,
-  M_ENT,
-  M_ULD,
-  M_THE,
+  // singeta homerow
+  KN_NO,
+  KN_TO,
+  KN_KA,
+  KN_N, // ん
+  KN_Q, // っ
+  KN_KU,
+  KN_U,
+  KN_I,
+  KN_SI,
+  KN_NA,
+  // singeta top row
+  KN_BOU, // ー
+  KN_NI,
+  KN_HA,
+  KN_TOU, // 、
+  KN_TI,
+  KN_GU,
+  KN_BA,
+  KN_KO,
+  KN_GA,
+  KN_HI,
+  KN_GE,
+  // singeta bottom row
+  KN_SU,
+  KN_MA,
+  KN_KI,
+  KN_RU,
+  KN_TU,
+  KN_TE,
+  KN_TA,
+  KN_DE,
+  KN_TEN, // 。
+  KN_BU
 };
+
+#include "g/keymap_combo.h" // combo definition marcos
 
 /* dual purpose mod/layer-tap keys */
 #define ST_SPC SFT_T(KC_SPC)
+#define ST_ENT SFT_T(KC_ENT)
 #define ST_BSPC SFT_T(KC_BSPC)
 #define LT_TAB LT(NAV, KC_TAB)
 #define LT_ENT LT(SYM, KC_ENT)
@@ -140,7 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,
       DF(QWE), KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,
       DF(DVO), OS_LGUI, OS_LALT, OS_LSFT, OS_RCTL, _______,
-      _______, _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
+      DF(SGT), _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
                                  _______, _______, _______, _______,
 
                _______, _______, SELWORD, _______, _______, _______,
@@ -192,6 +227,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   |      |      |      |/       /         \      \ |      |      |      |
  *                   `----------------------------'           '------''--------------------'
  */
+     [SGT] = LAYOUT_LR( // singeta layout
+       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
+       KC_BSLS, KN_BOU , KN_NI  , KN_HA  , KN_TOU , KN_TI  ,
+       KC_ESC , KN_NO  , KN_TO  , KN_KA  , KN_N   , KN_Q   ,
+       KC_LBRC, KN_SU  , KN_MA  , KN_KI  , KN_RU  , KN_TU  , KC_F11 ,
+                                  KC_UP  , KC_LEFT, ST_SPC , LT_TAB ,
+
+                         KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
+                         KN_GU  , KN_BA  , KN_KO  , KN_GA  , KN_HI  , KN_GE  ,
+                         KN_KU  , KN_U   , KN_I   , KN_SI  , KN_NA  , KC_BSPC,
+                KC_F12 , KN_TE  , KN_TA  , KN_DE  , KN_TEN , KN_BU  , KC_RBRC,
+                DF(DVO), ST_ENT , KC_RGHT, KC_DOWN
+    ),
+
 };
 
 /* layer_state_t layer_state_set_user(layer_state_t state) {
@@ -340,13 +389,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     set_keylog(keycode, record);
 #endif
     // set_timelog();
-    // switch (keycode) {
-      // Macros invoked through the ALTREP key.
-      // case M_ION:      SEND_STRING(/*t*/"ion"); break;
-      // case M_ENT:      SEND_STRING(/*m*/"ent"); break;
-      // case M_ULD:      SEND_STRING(/*c|w|sho*/"uld "); break;
-      // case M_THE:      SEND_STRING(/* */"the "); break;
-    // }
+    switch (keycode) {
+      // Singeta macros
+      // home
+      case KN_NO:      SEND_STRING("no"); break;
+      case KN_TO:      SEND_STRING("to"); break;
+      case KN_KA:      SEND_STRING("ka"); break;
+      case KN_N:       SEND_STRING("nn"); break;
+      case KN_Q:       SEND_STRING("xtu"); break;
+      case KN_KU:      SEND_STRING("ku"); break;
+      case KN_U:       SEND_STRING("u"); break;
+      case KN_I:       SEND_STRING("i"); break;
+      case KN_SI:      SEND_STRING("si"); break;
+      case KN_NA:      SEND_STRING("na"); break;
+      // top
+      case KN_BOU:     SEND_STRING("-"); break;
+      case KN_NI:      SEND_STRING("ni"); break;
+      case KN_HA:      SEND_STRING("ha"); break;
+      case KN_TOU:     SEND_STRING(","); break;
+      case KN_TI:      SEND_STRING("ti"); break;
+      case KN_GU:      SEND_STRING("gu"); break;
+      case KN_BA:      SEND_STRING("ba"); break;
+      case KN_KO:      SEND_STRING("ko"); break;
+      case KN_GA:      SEND_STRING("ga"); break;
+      case KN_HI:      SEND_STRING("hi"); break;
+      case KN_GE:      SEND_STRING("ge"); break;
+      // bottom
+      case KN_SU:      SEND_STRING("su"); break;
+      case KN_MA:      SEND_STRING("ma"); break;
+      case KN_KI:      SEND_STRING("ki"); break;
+      case KN_RU:      SEND_STRING("ru"); break;
+      case KN_TU:      SEND_STRING("tu"); break;
+      case KN_TE:      SEND_STRING("te"); break;
+      case KN_TA:      SEND_STRING("ta"); break;
+      case KN_DE:      SEND_STRING("de"); break;
+      case KN_TEN:     SEND_STRING(".");  break;
+      case KN_BU:      SEND_STRING("bu"); break;
+    }
   }
   return true;
 }
