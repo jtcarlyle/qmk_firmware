@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ONESHOT_TIMEOUT 5000  /* Time (in ms) before the one shot key is released */
 
 /* combo */
-#define COMBO_TERM 70 // 80 default for mozc, gboards had 50
+#define COMBO_TERM 50 // 80 default for mozc, gboards had 50
 
 /* I don't even have rgb on this keyboard */
 /* #undef RGBLED_NUM */
