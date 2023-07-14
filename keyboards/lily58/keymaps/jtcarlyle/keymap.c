@@ -5,9 +5,9 @@
 #include "layout.h"
 
 enum layer_number {
-  _DVORAK = 0,
-  _QWERTY,
+  _QWERTY = 0,
   _KOUME,
+  _DVORAK,
   _NAV,
   _SYM,
 };
@@ -35,7 +35,6 @@ enum custom_keycodes {
   KN_TE,
   KN_SE,
   KN_SO,
-  KN_GU,
   KN_MI,
   KN_O,
   KN_NO,
@@ -46,7 +45,6 @@ enum custom_keycodes {
   KN_XYU,
   KN_XYO,
   KN_RO,
-  KN_TU,
   KN_XYA,
   KN_Q, // っ
   KN_U,
@@ -55,15 +53,18 @@ enum custom_keycodes {
   KN_E
 };
 
-#include "g/keymap_combo.h" // combo definition marcos
-
 /* dual purpose mod/layer-tap keys */
 #define ST_SPC  LSFT_T(KC_SPC)
 #define ST_ENT  RSFT_T(KC_ENT)
+#define DV_SPC  LT(_DVORAK, KC_SPC)
+#define DV_ENT  LT(_DVORAK, KC_ENT)
 #define NAV_TAB LT(_NAV, KC_TAB)
 #define SM_BSPC LT(_SYM, KC_BSPC)
 #define AT_ESC  LALT_T(KC_ESC)
 #define AT_MINS RALT_T(KC_MINS)
+
+/* combo definition marcos */
+#include "g/keymap_combo.h" // must come after dual purpose definitions
 
 /* one shot modifiers */
 #define OS_LSFT OSM(MOD_LSFT)
@@ -74,7 +75,7 @@ enum custom_keycodes {
 /* base layer change */
 #define DVORAK  DF(_DVORAK)
 #define QWERTY  DF(_QWERTY)
-#define KANA    DF(_KANA)
+#define KOUME   DF(_KOUME)
 
 /* others, make macros later */
 #define DELWORD C(KC_BSPC)
@@ -87,61 +88,11 @@ enum custom_keycodes {
 #define REDO    C(KC_Y)
 #define ZOOMIN  C(KC_EQL)
 #define ZOOMOUT C(KC_MINS)
-#define CTL_ENT C(KC_ENT)
-
-/* kana related keys */
-#define KN_SPC  LT(_KANA_SFT, KC_SPC)
-#define KN_ENT  LT(_KANA_SFT, KC_ENT)
-// no easy fix for grave
-#define KN_NAKA S(KC_SLSH) // slash
-#define KN_XA   S(JP_3)
-#define KN_XI   S(JP_E)
-#define KN_XU   S(JP_4)
-#define KN_XE   S(JP_5)
-#define KN_XO   S(JP_6)
-#define KN_WO   S(JP_0)
-#define KN_XYA  S(JP_7)
-#define KN_XYU  S(JP_8)
-#define KN_XYO  S(JP_9)
-#define KN_Q    S(JP_Z)
-#define KN_LQT  S(JP_LBRC)
-#define KN_RQT  S(JP_RBRC)
-#define KN_COMM S(JP_COMM)
-#define KN_DOT  S(JP_DOT)
+#define SFT_ENT S(KC_ENT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-/* DVO - Base Layer DVORAK with changed numbers
- * ESC, - double as CTRL
- * [, ] double as ALT
- * ,-----------------------------------------.                    ,-----------------------------------------.
- * |  `   |   7  |   8  |   9  |   0  |   5  |                    |   6  |   1  |   2  |   3  |   4  |  =   |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  \   |   "  |   ,  |   .  |   P  |   Y  |                    |   F  |   G  |   C  |   R  |   L  |  /   |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  ESC |   A  |   O  |   E  |   U  |   I  |-------.    ,-------|   D  |   H  |   T  |   N  |   S  |  -   |
- * |------+------+------+------+------+------|  F11  |    |  F12  |------+------+------+------+------+------|
- * |  [   |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   B  |   M  |   W  |   V  |   Z  |  ]   |
- * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | Down |  Up  | Tab  | /  RET  /       \ SPC  \  | BKSPC |  <-  |  ->  |
- *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
- *                   `----------------------------'           '------''--------------------'
- */
-    [_DVORAK] = LAYOUT_LR(
-      KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
-      KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
-      AT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
-      KC_LGUI, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_LBRC,
-                                 LANG_ZH, KC_LCTL, ST_SPC , NAV_TAB,
-
-               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
-               KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
-               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , AT_MINS,
-      KC_RBRC, KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , KC_RGUI,
-      SM_BSPC, ST_ENT , KC_RCTL, LANG_JA
-    ),
-
-/* QWE - QWERTY
+/* QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |  `   |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |  -   |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
@@ -177,35 +128,51 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 
 /* Japanese layout
- *
+ * Trying out koume for now
  */
 
-    [_KANA] = LAYOUT_LR(
-      JP_GRV , JP_1   , JP_2   , JP_3   , JP_4   , JP_5   ,
-      JP_ZKHK, JP_EQL , JP_I,    JP_F   , KN_COMM, JP_A   ,
-      AT_ESC , JP_K   , JP_S   , JP_T   , JP_Y   , KN_Q   ,
-      KC_LGUI, JP_R,    JP_J   , JP_G   , JP_DOT , JP_Z   , KN_LQT ,
-                                 LANG_ZH, KC_LCTL, KN_SPC , NAV_TAB,
+    [_KOUME] = LAYOUT_LR(
+      KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
+      KC_BSLS, KN_TEN , KN_NA  , KN_TE  , KN_SE  , KN_SO  ,
+      AT_ESC , KN_KO  , KN_TA  , KN_KA  , KN_RU  , KN_HA  ,
+      KC_LGUI, KN_YU  , KN_XYU , KN_XYO , KN_RO  , KN_XYA , KC_LBRC,
+                                 LANG_ZH, KC_LCTL, DV_SPC , NAV_TAB,
 
-               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , JP_YEN ,
-               JP_2   , JP_3   , KN_XYO , JP_U   , JP_V   , KN_NAKA,
-               JP_H   , JP_4   , JP_E   , JP_AT  , JP_D   , AT_MINS,
-      KN_RQT,  JP_W   , JP_Q   , JP_B   , KN_DOT , KN_WO  , KC_RGUI,
-      SM_BSPC, KN_ENT , KC_RCTL, LANG_JA
+               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
+               KN_MI  , KN_O   , KN_NO  , KN_NI  , KN_TOU , KN_NAKA,
+               KN_BIKI, KN_N   , KN_I   , KN_SI  , KN_TO  , AT_MINS,
+      KC_RBRC, KN_Q   , KN_U   , KN_SU  , KN_RA  , KN_E   , KC_RGUI,
+      SM_BSPC, DV_ENT , KC_RCTL, LANG_JA
     ),
 
-    [_KANA_SFT] = LAYOUT_LR(
-      _______, _______, _______, _______, _______, _______,
-      _______, KN_XA  , JP_SLSH, JP_COLN, JP_LBRC, KN_XE  ,
-      _______, JP_MINS, JP_X   , JP_6   , JP_M   , JP_8   ,
-      _______, KN_XYA,  KN_XI  , KC_GRV , JP_RBRC, JP_1   , _______,
-                                 _______, _______, _______, _______,
+/* Base Layer DVORAK with changed numbers
+ * ESC, - double as CTRL
+ * [, ] double as ALT
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |  `   |   7  |   8  |   9  |   0  |   5  |                    |   6  |   1  |   2  |   3  |   4  |  =   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  \   |   "  |   ,  |   .  |   P  |   Y  |                    |   F  |   G  |   C  |   R  |   L  |  /   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  ESC |   A  |   O  |   E  |   U  |   I  |-------.    ,-------|   D  |   H  |   T  |   N  |   S  |  -   |
+ * |------+------+------+------+------+------|  F11  |    |  F12  |------+------+------+------+------+------|
+ * |  [   |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   B  |   M  |   W  |   V  |   Z  |  ]   |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | Down |  Up  | Tab  | /  RET  /       \ SPC  \  | BKSPC |  <-  |  ->  |
+ *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+    [_DVORAK] = LAYOUT_LR(
+      KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
+      KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
+      AT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
+      KC_LGUI, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_LBRC,
+                                 LANG_ZH, KC_LCTL, ST_SPC , NAV_TAB,
 
-               _______, _______, _______, _______, _______, _______,
-               KN_XO  , KN_XU  , JP_9   , JP_N   , JP_5   , _______,
-               JP_CIRC, JP_O   , JP_SCLN, JP_L   , JP_C   , _______,
-      _______, JP_P   , JP_COMM, KN_XYU , JP_7   , JP_0   , _______,
-      _______, _______, _______, _______
+               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
+               KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
+               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , AT_MINS,
+      KC_RBRC, KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , KC_RGUI,
+      SM_BSPC, ST_ENT , KC_RCTL, LANG_JA
     ),
 
 /* NAV - Text editing/navigation layer
@@ -226,14 +193,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______,
       QWERTY , KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,
       DVORAK , OS_LGUI, OS_LALT, OS_LSFT, OS_LCTL, _______,
-      KANA   , _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
+      KOUME  , _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
                                  _______, _______, _______, _______,
 
                _______, _______, SELWORD, _______, _______, _______,
                C(KC_Z), PRVWORD, KC_UP  , NXTWORD, REDO   , ZOOMIN ,
                HOME   , KC_LEFT, KC_DOWN, KC_RGHT, END    , ZOOMOUT,
       _______, C(KC_F), NXTPARA, KC_PGUP, KC_PGDN, PRVPARA, _______,
-      DELWORD, CTL_ENT, _______, _______
+      DELWORD, SFT_ENT, _______, _______
     ),
 
 /* SYML - function keys and symbols on the left hand (intended for cross hand use)
@@ -331,8 +298,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     set_keylog(keycode, record);
 #endif
     // set_timelog();
-    // switch (keycode) {
-    // }
+    switch (keycode) {
+      // kana macros
+      case KN_TEN:     SEND_STRING(".");  break;
+      case KN_NA:      SEND_STRING("na"); break;
+      case KN_TE:      SEND_STRING("te"); break;
+      case KN_SE:      SEND_STRING("se"); break;
+      case KN_SO:      SEND_STRING("so"); break;
+      case KN_MI:      SEND_STRING("mi"); break;
+      case KN_O:       SEND_STRING("o"); break;
+      case KN_NO:      SEND_STRING("no"); break;
+      case KN_NI:      SEND_STRING("ni"); break;
+      case KN_TOU:     SEND_STRING(","); break;
+      case KN_KO:      SEND_STRING("ko"); break;
+      case KN_TA:      SEND_STRING("ta"); break;
+      case KN_KA:      SEND_STRING("ka"); break;
+      case KN_RU:      SEND_STRING("ru"); break;
+      case KN_HA:      SEND_STRING("ha"); break;
+      case KN_BIKI:    SEND_STRING("-"); break;
+      case KN_N:       SEND_STRING("nn"); break;
+      case KN_I:       SEND_STRING("i"); break;
+      case KN_SI:      SEND_STRING("si"); break;
+      case KN_TO:      SEND_STRING("to"); break;
+      case KN_YU:      SEND_STRING("yu"); break;
+      case KN_XYU:     SEND_STRING("xyu"); break;
+      case KN_XYO:     SEND_STRING("xyo"); break;
+      case KN_RO:      SEND_STRING("ro"); break;
+      case KN_XYA:     SEND_STRING("xya"); break;
+      case KN_Q:       SEND_STRING("xtu"); break;
+      case KN_U:       SEND_STRING("u"); break;
+      case KN_SU:      SEND_STRING("su"); break;
+      case KN_RA:      SEND_STRING("ra"); break;
+      case KN_E:       SEND_STRING("e"); break;
+    }
   }
   return true;
 }
