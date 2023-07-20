@@ -61,7 +61,7 @@ enum custom_keycodes {
 #define AT_MINS RALT_T(KC_MINS)
 #define CT_RGHT LCTL_T(KC_RGHT)
 #define CT_DOWN RCTL_T(KC_DOWN)
-#define GT_KANA LGUI_T(KC_F8)
+// #define GT_KANA LGUI_T(KC_F8)
 
 /* one shot modifiers */
 #define OS_LSFT OSM(MOD_LSFT)
@@ -202,7 +202,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
       KC_BSLS, KN_TEN , KN_NA  , KN_TE  , KN_SE  , KN_SO  ,
       AT_ESC , KN_KO  , KN_TA  , KN_KA  , KN_RU  , KN_HA  ,
-      GT_KANA, KN_YU  , KN_XYU , KN_XYO , KN_RO  , KN_XYA , KC_LBRC,
+      TD(GJK), KN_YU  , KN_XYU , KN_XYO , KN_RO  , KN_XYA , KC_LBRC,
                                  KC_LEFT, CT_RGHT, ST_SPC , NAV_TAB,
 
                KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
@@ -351,15 +351,20 @@ void jakn_finished(tap_dance_state_t *state, void *user_data) {
     td_state = cur_dance(state);
     switch (td_state) {
         case TD_SINGLE_TAP:
-            layer_move(_KOUME);
-            register_code16(S(KC_F7));
+            if (IS_LAYER_ON(_KOUME)) tap_code16(S(KC_F8));
+            else {
+                layer_move(_KOUME);
+                tap_code16(S(KC_F7));
+            }
             break;
         case TD_SINGLE_HOLD:
             register_mods(MOD_BIT(KC_LGUI));
             break;
         case TD_DOUBLE_SINGLE_TAP: // Switch to JA and press kana key
-            layer_move(_KOUME);
-            tap_code16(S(KC_F7));
+            if (!IS_LAYER_ON(_KOUME)) {
+                layer_move(_KOUME);
+                tap_code16(S(KC_F7));
+            }
             register_code16(S(KC_F8));
             break;
         default:
@@ -370,7 +375,6 @@ void jakn_finished(tap_dance_state_t *state, void *user_data) {
 void jakn_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
-            unregister_code16(S(KC_F7));
             break;
         case TD_SINGLE_HOLD:
             unregister_mods(MOD_BIT(KC_LGUI));
