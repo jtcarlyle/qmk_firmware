@@ -1,23 +1,20 @@
 #include QMK_KEYBOARD_H
 
 #include "features/select_word.h"
-#include "keymap_japanese.h"
+// japanese map is poorly implemented
+// #include "keymap_japanese.h"
 #include "layout.h"
 
 enum layer_number {
-  _QWERTY = 0,
+  _DVORAK = 0,
+  _QWERTY,
   _KOUME,
-  _DVORAK,
   _NAV,
   _SYM,
 };
 
 enum custom_keycodes {
   SELWORD = SAFE_RANGE,
-  // input method and layout change macros
-  LANG_EN,
-  LANG_ZH,
-  LANG_JA,
   // koume homerow
   KN_KO,
   KN_TA,
@@ -56,15 +53,15 @@ enum custom_keycodes {
 /* dual purpose mod/layer-tap keys */
 #define ST_SPC  LSFT_T(KC_SPC)
 #define ST_ENT  RSFT_T(KC_ENT)
-#define DV_SPC  LT(_DVORAK, KC_SPC)
-#define DV_ENT  LT(_DVORAK, KC_ENT)
+// #define DV_SPC  LT(_DVORAK, KC_SPC)
+// #define DV_ENT  LT(_DVORAK, KC_ENT)
 #define NAV_TAB LT(_NAV, KC_TAB)
 #define SM_BSPC LT(_SYM, KC_BSPC)
 #define AT_ESC  LALT_T(KC_ESC)
 #define AT_MINS RALT_T(KC_MINS)
-
-/* combo definition marcos */
-#include "g/keymap_combo.h" // must come after dual purpose definitions
+#define CT_RGHT LCTL_T(KC_RGHT)
+#define CT_DOWN RCTL_T(KC_DOWN)
+#define GT_KANA LGUI_T(KC_F8)
 
 /* one shot modifiers */
 #define OS_LSFT OSM(MOD_LSFT)
@@ -72,12 +69,15 @@ enum custom_keycodes {
 #define OS_LALT OSM(MOD_LALT)
 #define OS_LGUI OSM(MOD_LGUI)
 
+/* combo definition marcos */
+#include "g/keymap_combo.h" // must come after dual purpose definitions
+
 /* base layer change */
 #define DVORAK  DF(_DVORAK)
 #define QWERTY  DF(_QWERTY)
-#define KOUME   DF(_KOUME)
+#define KOUME   TO(_KOUME)
 
-/* others, make macros later */
+/* others, make some macros later */
 #define DELWORD C(KC_BSPC)
 #define NXTWORD C(KC_RGHT)
 #define PRVWORD C(KC_LEFT)
@@ -89,8 +89,75 @@ enum custom_keycodes {
 #define ZOOMIN  C(KC_EQL)
 #define ZOOMOUT C(KC_MINS)
 #define SFT_ENT S(KC_ENT)
+#define SELLINE S(SELWORD)
+
+/* language specific stuff */
+// none of the language-specific keys work on Mac
+// have to use other janky key bindings
+// used for toggling IME, might need to change for Mac
+// #define ZENHAN   KC_LNG5 // Zenkaku ↔ Hankaku ↔ Kanji (半角 ↔ 全角 ↔ 漢字)
+// #define KANA     KC_INT2 // Katakana ↔ Hiragana ↔ Rōmaji (カタカナ ↔ ひらがな ↔ ローマ字)
+// using F13 and F7 for input change and katakana since they are default in MS-IME and I'm lazy
+// okay maybe F13 is not default
+bool is_zh_active = false; // Chinese input is active
+
+/* Tap dance */
+// Tap Dance keycodes
+enum td_keycodes {
+    GEZ, // toggle English/Chinese on tap, right gui on hold
+    GJK  // toggle Japanese/switch kana type on tap, left gui on hold
+};
+
+// Define a type containing as many tapdance states as you need
+typedef enum {
+    TD_NONE,
+    TD_UNKNOWN,
+    TD_SINGLE_TAP,
+    TD_SINGLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP
+} td_state_t;
+
+// Create a global instance of the tapdance state type
+static td_state_t td_state;
+
+// Declare your tapdance functions:
+
+// Function to determine the current tapdance state
+td_state_t cur_dance(tap_dance_state_t *state);
+
+// `finished` and `reset` functions for each tapdance keycode
+void altlp_finished(tap_dance_state_t *state, void *user_data);
+void altlp_reset(tap_dance_state_t *state, void *user_data);
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+
+/* Base Layer DVORAK
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |  `   |   7  |   8  |   9  |   0  |   5  |                    |   6  |   1  |   2  |   3  |   4  |  =   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  \   |   "  |   ,  |   .  |   P  |   Y  |                    |   F  |   G  |   C  |   R  |   L  |  /   |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  ESC |   A  |   O  |   E  |   U  |   I  |-------.    ,-------|   D  |   H  |   T  |   N  |   S  |  -   |
+ * |------+------+------+------+------+------|  F11  |    |  F12  |------+------+------+------+------+------|
+ * |  [   |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   B  |   M  |   W  |   V  |   Z  |  ]   |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | Down |  Up  | Tab  | /  RET  /       \ SPC  \  | BKSPC |  <-  |  ->  |
+ *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+    [_DVORAK] = LAYOUT_LR(
+      KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
+      KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
+      AT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
+      TD(GJK), KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_LBRC,
+                                 KC_LEFT, CT_RGHT, ST_SPC , NAV_TAB,
+
+               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
+               KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
+               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , AT_MINS,
+      KC_RBRC, KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , TD(GEZ),
+      SM_BSPC, ST_ENT , CT_DOWN, KC_UP
+    ),
 
 /* QWERTY
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -135,44 +202,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
       KC_BSLS, KN_TEN , KN_NA  , KN_TE  , KN_SE  , KN_SO  ,
       AT_ESC , KN_KO  , KN_TA  , KN_KA  , KN_RU  , KN_HA  ,
-      KC_LGUI, KN_YU  , KN_XYU , KN_XYO , KN_RO  , KN_XYA , KC_LBRC,
-                                 LANG_ZH, KC_LCTL, DV_SPC , NAV_TAB,
+      GT_KANA, KN_YU  , KN_XYU , KN_XYO , KN_RO  , KN_XYA , KC_LBRC,
+                                 KC_LEFT, CT_RGHT, ST_SPC , NAV_TAB,
 
                KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
                KN_MI  , KN_O   , KN_NO  , KN_NI  , KN_TOU , KN_NAKA,
                KN_BIKI, KN_N   , KN_I   , KN_SI  , KN_TO  , AT_MINS,
-      KC_RBRC, KN_Q   , KN_U   , KN_SU  , KN_RA  , KN_E   , KC_RGUI,
-      SM_BSPC, DV_ENT , KC_RCTL, LANG_JA
-    ),
-
-/* Base Layer DVORAK with changed numbers
- * ESC, - double as CTRL
- * [, ] double as ALT
- * ,-----------------------------------------.                    ,-----------------------------------------.
- * |  `   |   7  |   8  |   9  |   0  |   5  |                    |   6  |   1  |   2  |   3  |   4  |  =   |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  \   |   "  |   ,  |   .  |   P  |   Y  |                    |   F  |   G  |   C  |   R  |   L  |  /   |
- * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  ESC |   A  |   O  |   E  |   U  |   I  |-------.    ,-------|   D  |   H  |   T  |   N  |   S  |  -   |
- * |------+------+------+------+------+------|  F11  |    |  F12  |------+------+------+------+------+------|
- * |  [   |   Z  |   X  |   C  |   V  |   B  |-------|    |-------|   B  |   M  |   W  |   V  |   Z  |  ]   |
- * `-----------------------------------------/       /     \      \-----------------------------------------'
- *                   | Down |  Up  | Tab  | /  RET  /       \ SPC  \  | BKSPC |  <-  |  ->  |
- *                   |      | GUI  | EXT  |/ Shift /         \ Shift\ | EXT   | GUI  |      |
- *                   `----------------------------'           '------''--------------------'
- */
-    [_DVORAK] = LAYOUT_LR(
-      KC_GRV , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,
-      KC_BSLS, KC_QUOT, KC_COMM, KC_DOT , KC_P   , KC_Y   ,
-      AT_ESC , KC_A   , KC_O   , KC_E   , KC_U   , KC_I   ,
-      KC_LGUI, KC_SCLN, KC_Q   , KC_J   , KC_K   , KC_X   , KC_LBRC,
-                                 LANG_ZH, KC_LCTL, ST_SPC , NAV_TAB,
-
-               KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_EQL ,
-               KC_F   , KC_G   , KC_C   , KC_R   , KC_L   , KC_SLSH,
-               KC_D   , KC_H   , KC_T   , KC_N   , KC_S   , AT_MINS,
-      KC_RBRC, KC_B   , KC_M   , KC_W   , KC_V   , KC_Z   , KC_RGUI,
-      SM_BSPC, ST_ENT , KC_RCTL, LANG_JA
+      KC_RBRC, KN_Q   , KN_U   , KN_SU  , KN_RA  , KN_E   , TD(GEZ),
+      SM_BSPC, ST_ENT , CT_DOWN, KC_UP
     ),
 
 /* NAV - Text editing/navigation layer
@@ -200,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                C(KC_Z), PRVWORD, KC_UP  , NXTWORD, REDO   , ZOOMIN ,
                HOME   , KC_LEFT, KC_DOWN, KC_RGHT, END    , ZOOMOUT,
       _______, C(KC_F), NXTPARA, KC_PGUP, KC_PGDN, PRVPARA, _______,
-      DELWORD, SFT_ENT, _______, _______
+      KC_DEL , SELLINE, KC_PGDN, KC_PGDN
     ),
 
 /* SYML - function keys and symbols on the left hand (intended for cross hand use)
@@ -222,7 +259,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, _______, KC_LABK, KC_RABK, KC_ASTR, _______,
        _______, KC_PLUS, KC_SLSH, KC_MINS, KC_EQL , KC_HASH,
        _______, KC_EXLM, KC_MUTE, KC_VOLD, KC_VOLU, _______, KC_F11 ,
-                                  _______, _______, KC_UNDS, KC_DEL ,
+                                  HOME   , END    , SELWORD, KC_UNDS,
 
                          KC_F6  , KC_F7  , KC_F8  , KC_F9  , KC_F10 , _______,
                          KC_AMPR, KC_AT  , KC_LBRC, KC_RBRC, KC_CIRC, _______,
@@ -246,6 +283,110 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 
+};
+
+// Determine the tapdance state to return
+td_state_t cur_dance(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    }
+
+    if (state->count == 2) return TD_DOUBLE_SINGLE_TAP;
+    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
+}
+
+// Handle the possible states for each tapdance keycode you define:
+void enzh_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            // switch to EN from ZH or JA
+            if (is_zh_active || IS_LAYER_ON(_KOUME)) {
+                is_zh_active = false;
+                register_code(KC_F5);
+            }
+            // otherwise switch to ZH from EN
+            else {
+                is_zh_active = true;
+                register_code(KC_F6);
+            }
+            layer_move(_DVORAK);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_RGUI));
+            break;
+        case TD_DOUBLE_SINGLE_TAP: // Switch to ZH from JA/ZH
+            // switch to ZH from JA
+            if (IS_LAYER_ON(_KOUME)) {
+                is_zh_active = true;
+                register_code(KC_F6);
+                layer_move(_DVORAK);
+            }
+            // don't need to do anything from ZH and EN
+            break;
+        default:
+            break;
+    }
+}
+
+void enzh_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            if (is_zh_active) unregister_code(KC_F6);
+            else unregister_code(KC_F5);
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_RGUI));
+            break;
+        case TD_DOUBLE_SINGLE_TAP:
+            if (is_zh_active) unregister_code(KC_F6);
+            break;
+        default:
+            break;
+    }
+}
+
+void jakn_finished(tap_dance_state_t *state, void *user_data) {
+    td_state = cur_dance(state);
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            layer_move(_KOUME);
+            register_code(KC_F7);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LGUI));
+            break;
+        case TD_DOUBLE_SINGLE_TAP: // Switch to JA and press kana key
+            layer_move(_KOUME);
+            tap_code(KC_F7);
+            register_code(KC_F8);
+            break;
+        default:
+            break;
+    }
+}
+
+void jakn_reset(tap_dance_state_t *state, void *user_data) {
+    switch (td_state) {
+        case TD_SINGLE_TAP:
+            unregister_code(KC_F7);
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LGUI));
+            break;
+        case TD_DOUBLE_SINGLE_TAP:
+            unregister_code(KC_F8);
+            break;
+        default:
+            break;
+    }
+}
+
+// Define `ACTION_TAP_DANCE_FN_ADVANCED()` for each tapdance keycode, passing in `finished` and `reset` functions
+tap_dance_action_t tap_dance_actions[] = {
+    [GEZ] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, enzh_finished, enzh_reset),
+    [GJK] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, jakn_finished, jakn_reset)
 };
 
 /* layer_state_t layer_state_set_user(layer_state_t state) {
