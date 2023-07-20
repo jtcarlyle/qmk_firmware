@@ -304,12 +304,12 @@ void enzh_finished(tap_dance_state_t *state, void *user_data) {
             // switch to EN from ZH or JA
             if (is_zh_active || IS_LAYER_ON(_KOUME)) {
                 is_zh_active = false;
-                register_code(KC_F5);
+                register_code16(S(KC_F5));
             }
             // otherwise switch to ZH from EN
             else {
                 is_zh_active = true;
-                register_code(KC_F6);
+                register_code16(S(KC_F6));
             }
             layer_move(_DVORAK);
             break;
@@ -320,7 +320,7 @@ void enzh_finished(tap_dance_state_t *state, void *user_data) {
             // switch to ZH from JA
             if (IS_LAYER_ON(_KOUME)) {
                 is_zh_active = true;
-                register_code(KC_F6);
+                register_code16(S(KC_F6));
                 layer_move(_DVORAK);
             }
             // don't need to do anything from ZH and EN
@@ -333,14 +333,14 @@ void enzh_finished(tap_dance_state_t *state, void *user_data) {
 void enzh_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
-            if (is_zh_active) unregister_code(KC_F6);
-            else unregister_code(KC_F5);
+            if (is_zh_active) unregister_code16(S(KC_F6));
+            else unregister_code16(S(KC_F5));
             break;
         case TD_SINGLE_HOLD:
             unregister_mods(MOD_BIT(KC_RGUI));
             break;
         case TD_DOUBLE_SINGLE_TAP:
-            if (is_zh_active) unregister_code(KC_F6);
+            if (is_zh_active) unregister_code16(S(KC_F6));
             break;
         default:
             break;
@@ -352,15 +352,15 @@ void jakn_finished(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
             layer_move(_KOUME);
-            register_code(KC_F7);
+            register_code16(S(KC_F7));
             break;
         case TD_SINGLE_HOLD:
             register_mods(MOD_BIT(KC_LGUI));
             break;
         case TD_DOUBLE_SINGLE_TAP: // Switch to JA and press kana key
             layer_move(_KOUME);
-            tap_code(KC_F7);
-            register_code(KC_F8);
+            tap_code16(S(KC_F7));
+            register_code16(S(KC_F8));
             break;
         default:
             break;
@@ -370,13 +370,13 @@ void jakn_finished(tap_dance_state_t *state, void *user_data) {
 void jakn_reset(tap_dance_state_t *state, void *user_data) {
     switch (td_state) {
         case TD_SINGLE_TAP:
-            unregister_code(KC_F7);
+            unregister_code16(S(KC_F7));
             break;
         case TD_SINGLE_HOLD:
             unregister_mods(MOD_BIT(KC_LGUI));
             break;
         case TD_DOUBLE_SINGLE_TAP:
-            unregister_code(KC_F8);
+            unregister_code16(S(KC_F8));
             break;
         default:
             break;
