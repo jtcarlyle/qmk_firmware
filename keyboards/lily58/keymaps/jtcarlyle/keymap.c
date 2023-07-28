@@ -229,7 +229,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAV] = LAYOUT_LR(
       _______, _______, _______, _______, _______, _______,
       QWERTY , KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,
-      DVORAK , OS_LGUI, OS_LALT, OS_LSFT, OS_LCTL, _______,
+      DVORAK , OS_LGUI, OS_LALT, OS_LCTL, OS_LSFT, _______,
       KOUME  , _______, C(KC_X), C(KC_C), C(KC_V), _______, _______,
                                  _______, _______, _______, _______,
 
@@ -237,7 +237,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                C(KC_Z), PRVWORD, KC_UP  , NXTWORD, REDO   , ZOOMIN ,
                HOME   , KC_LEFT, KC_DOWN, KC_RGHT, END    , ZOOMOUT,
       _______, C(KC_F), NXTPARA, KC_PGUP, KC_PGDN, PRVPARA, _______,
-      KC_DEL , SELLINE, KC_PGDN, KC_PGDN
+      KC_DEL , SELLINE, KC_PGDN, KC_PGUP
     ),
 
 /* SYML - function keys and symbols on the left hand (intended for cross hand use)
