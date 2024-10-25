@@ -5,8 +5,9 @@
 
 enum custom_layers {
      _DVORAK,
+     _QWERTY,
      _LOWER,
-     _RAISE
+     _RAISE,
 };
 
 /* dual purpose mod/layer-tap keys */
@@ -16,6 +17,7 @@ enum custom_layers {
 #define RA_BSPC LT(_RAISE, KC_BSPC)
 #define AT_ESC  LALT_T(KC_ESC)
 #define AT_MINS RALT_T(KC_MINS)
+#define AT_QUOT RALT_T(KC_QUOT)
 
 /* one shot modifiers */
 #define OS_LSFT OSM(MOD_LSFT)
@@ -35,6 +37,10 @@ enum custom_layers {
 #define ZOOMIN  C(KC_EQL)
 #define ZOOMOUT C(KC_MINS)
 
+/* base layer change */
+#define DVORAK  DF(_DVORAK)
+#define QWERTY  DF(_QWERTY)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_DVORAK] = LAYOUT(
@@ -51,9 +57,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                 // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
   ),
 
+  [_QWERTY] = LAYOUT(
+  //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
+     KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_EQL,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     KC_TAB,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
+  //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
+     KC_LALT,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN,  AT_QUOT,
+  //├────────┼────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┼────────┼────────┼────────┤
+     KC_LGUI,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    LO_TAB,          KC_RBRC,  KC_N,    KC_M,   KC_COMM,  KC_DOT, KC_SLSH,  KC_RGUI,
+  //└────────┴────────┴────────┴───┬────┴───┬────┴───┬────┴───┬────┘        └───┬────┴───┬────┴───┬────┴───┬────┴────────┴────────┴────────┘
+                                    KC_LCTL,  KC_SPC,  KC_LSFT,                   RA_BSPC, ST_ENT,  KC_RCTL
+                                // └────────┴────────┴────────┘                 └────────┴────────┴────────┘
+  ),
+
   [_LOWER] = LAYOUT(
   //┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐
-     _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
+      DVORAK,  QWERTY, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
      QK_BOOT, KC_MPRV, KC_MPLY, DELWORD, KC_MNXT, _______,                            C(KC_Z), PRVWORD, KC_UP,   NXTWORD, REDO,    ZOOMIN,
   //├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤
